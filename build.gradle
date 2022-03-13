@@ -1,0 +1,59 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+
+	//jib
+	id 'com.google.cloud.tools.jib' version '3.2.0'
+}
+
+group = 'com.example'
+version = '0.0.7-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+jib {
+	from {
+		image = "openjdk:17-oracle"
+	}
+	to {
+		image = "${project.name}:${version}"
+		/* Uncomment below part to publish created image to docker registry.
+		image = "${docker-registry-url}/${project.name}:${version}"
+		auth {
+			username = property('myusername')
+			password = property('mypassword')
+		}
+		 */
+	}
+}
+
+/*
+bootBuildImage {
+	imageName = "${project.name}:${version}"
+	*/
+/* Uncomment below part to publish created image to docker registry.
+	publish = true
+	docker {
+		publishRegistry {
+			username = "user"
+			password = "secret"
+			url = "https://docker.example.com/v1/"
+			email = "user@example.com"
+		}
+	}*//*
+
+}
+*/
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
